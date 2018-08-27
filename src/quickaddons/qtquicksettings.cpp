@@ -31,7 +31,11 @@ void KQuickAddons::QtQuickSettings::init()
     }
 
     if (!s.sceneGraphBackend().isNull()) {
-     QQuickWindow::setSceneGraphBackend(s.sceneGraphBackend());
+#if QT_VERSION >= QT_VERSION_CHECK(5,8,0)
+        QQuickWindow::setSceneGraphBackend(s.sceneGraphBackend());
+#else
+        qputenv("QMLSCENE_DEVICE", s.sceneGraphBackend().toLatin1());
+#endif
     }
     auto format = QSurfaceFormat::defaultFormat();
     if (s.forceGlCoreProfile()) {
